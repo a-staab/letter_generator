@@ -5,31 +5,31 @@ def get_user_info():
     """Displays prompts on command line and returns values for each line of
     sender's postal address and the body of their letter."""
 
-    print "\n\nLooks like you're looking to send a message to your senator. \
-    Let's get started!\n"
+    print ("\nLooks like you're looking to send a message to your senator. "
+           "\nLet's get started!")
 
-    sender_name = raw_input("What's your full name? Type it, and then press \
-    enter. ")
+    sender_name = raw_input("\nWhat's your full name? Type it, and then press"
+                            " enter. ")
 
-    from_address_1 = raw_input("What's your street address? If you have an \
-    apartment code or suite number, leave it out for now: we'll get to it \
-    next. ")
+    from_address_1 = raw_input("\nWhat's your street address? If you have an"
+                               " apartment code or suite number, leave it out"
+                               " for now: we'll get to it next. ")
 
-    from_address_2 = raw_input("Okay, if you have an apartment code or suite \
-    number, enter it here. ")
+    from_address_2 = raw_input("\nOkay, if you have an apartment code or suite"
+                               " number, enter it here. ")
 
-    from_city = raw_input("City? ")
+    from_city = raw_input("\nCity? ")
 
-    from_state = raw_input("State? Please capitalize and abbreviate, e.g., CA \
-    for California. ")
+    from_state = raw_input("\nState? Please capitalize and abbreviate, e.g., CA"
+                           " for California. ")
 
-    from_zip = raw_input("Zip Code? ")
+    from_zip = raw_input("\nZip Code? ")
 
-    letter_body = raw_input("Great! Now, what would you like to say in the \
-    body of your letter? ")
+    letter_body = raw_input("\nGreat! Now, what would you like to say in the"
+                            " body of your letter? ")
 
-    return sender_name, from_address_1, from_address_2, from_city, from_state,
-    from_zip, letter_body
+    return (sender_name, from_address_1, from_address_2, from_city, from_state,
+            from_zip, letter_body)
 
 print get_user_info()
 
