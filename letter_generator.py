@@ -3,7 +3,8 @@ import os
 import pprint
 
 
-google_key = os.environ["API_KEY"]
+google_key = os.environ["GOOGLE_API_KEY"]
+lob_key = os.environ["LOB_API_KEY"]
 
 
 def get_user_info():
@@ -62,7 +63,7 @@ def get_user_info():
     return sender_name, from_address_1, from_address_2, from_city, from_state, from_zip, letter_body
 
 
-def get_all_rep_info(user_addr1, user_addr2, user_city, user_state):
+def get_civic_api_info(user_addr1, user_addr2, user_city, user_state):
 # headers = {' ': ' '} (if passing, add as argument after URL)
     resp = requests.get('https://www.googleapis.com/civicinfo/v2/representatives?key={}&address={}%20{}%20{}%20{}&prettyPrint'.format(google_key, user_addr1, user_addr2, user_city, user_state))
     # resp.json()[message] - ?
@@ -75,33 +76,19 @@ class ApiError(Exception):
     pass
 
 user_name, user_addr1, user_addr2, user_city, user_state, user_zip, letter_body = get_user_info()
-response_object = get_all_rep_info(user_addr1, user_addr2, user_city, user_state)
+response_object = get_civic_api_info(user_addr1, user_addr2, user_city, user_state)
 
-verified_user_address = response_object['normalizedInput']
 
-for office in (response_object)['offices']:
-    # if office['name'] == "Mayor":
-    if office['name'].startswith("United States House of Representatives"):
-        officials_ids = office['officialIndices']
+def get_mailing_addresses(response_object, sender):
+    verified_user_address = response_object['normalizedInput']
 
-# neg_offset = 0
-# for office in (response_object)['offices']:
-#     if len(office['officialIndices']) > len(index_list) and office['officialIndices'][-1] < index_list[0]:
-#         for item in range(len(office['officialIndices']) - 1):
-#             neg_offset += 1
+    for office in (response_object)['offices']:
+        if office['name'].startswith("United States House of Representatives"):
+            officials_ids = office['officialIndices']
 
-# pprint.pprint((response_object)['officials'])
+    rep_name = ((response_object)['officials'])[(officials_ids[0])]['name']
+    rep_address = ((response_object)['officials'])[(officials_ids[0])]['address']
 
-pprint.pprint(((response_object)['officials'])[(officials_ids[0])])
+    return sender, verified_user_address, rep_name, rep_address
 
-# for office in rep_info['offices']:
-#     if rep_info['offices']['name'] == 'Mayor':
-#         print rep_info['offices']['officialIndices']
-
-# From Name: Joe Schmoe
-# From Address Line 1: 185 Berry Street
-# From Address Line 2: Suite 170
-# From City: San Francisco
-# From State: CA
-# From Zip Code: 94107
-# Message: This is a test letter for Lob's coding challenge. Thank you legislator.
+pprint.pprint(get_mailing_addresses(response_object, user_name))
