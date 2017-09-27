@@ -2,6 +2,7 @@ import requests
 import os
 import lob
 
+
 google_key = os.environ["GOOGLE_API_KEY"]
 lob.api_key = os.environ["LOB_API_KEY"]
 
@@ -12,7 +13,7 @@ class ApiError(Exception):
 
 def get_user_info():
     """Displays prompts on command line and returns values for each line of
-    sender's postal address and the body of their letter.
+    a postal address and the body of a letter provided by the user.
     """
 
     print ("\nLooks like you want to send a message to your Representative in "
@@ -38,33 +39,6 @@ def get_user_info():
     letter_body = raw_input("\nGreat! Now, what would you like to say in the "
                             "body of your letter? \n\n")
 
-    # FOR TESTING
-
-    # sender_name = "RaeAnne Staab"
-    # from_address_1 = "2531 North Routiers Avenue"
-    # from_address_2 = ""
-    # from_city = "Indianapolis"
-    # from_state = "IN"
-    # from_zip = "46219"
-    # letter_body = "Thanks, Representative!"
-
-    # sender_name = "Joe Schmoe"
-    # from_address_1 = "185 Berry Street"
-    # from_address_2 = "Suite 170"
-    # from_city = "San Francisco"
-    # from_state = "CA"
-    # from_zip = "94107"
-    # letter_body = "This is a test letter for Lob's coding challenge. "
-    #                "Thank you legislator"
-
-    # sender_name = "Eva Hesse"
-    # from_address_1 = "1000 5th Avenue"
-    # from_address_2 = ""
-    # from_city = "New York"
-    # from_state = "NY"
-    # from_zip = "10028"
-    # letter_body = "Hey Rep, fund the arts!"
-
     return sender_name, from_address_1, from_address_2, from_city, from_state, from_zip, letter_body
 
 
@@ -81,7 +55,6 @@ def get_civic_api_info(user_addr1, user_addr2, user_city, user_state):
                                                                user_addr2,
                                                                user_city,
                                                                user_state))
-    # resp.json()[message] - ?
     if resp.status_code != 200:
         raise ApiError('Google CI: Error code %s. Reason: %s - %s' % (
             resp.status_code, resp.reason, resp.json()['error']['message']))
@@ -90,7 +63,7 @@ def get_civic_api_info(user_addr1, user_addr2, user_city, user_state):
 
 def extract_rep_info(response_object):
     """Takes a response object from the Google Civic API; returns the full name
-    and first line, second line, city, state, and zip code for the address of 
+    and first line, second line, city, state, and zip code for the address of
     the first House of Representatives member found in the response object.
     """
 
