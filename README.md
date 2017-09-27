@@ -12,6 +12,8 @@ Neat, right?
 - Google Civic Information API
 - Requests library
 
+![Screenshot](./screenshot.png)
+
 #### Installation
 
 This program is written in [Python](https://www.python.org/downloads/) 2.7, so you'll need to download and install this version of Python in order to run it, if it's not installed on your machine already.
