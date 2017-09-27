@@ -4,7 +4,7 @@ import pprint
 import lob
 
 google_key = os.environ["GOOGLE_API_KEY"]
-lob_key = os.environ["LOB_API_KEY"]
+lob.api_key = os.environ["LOB_API_KEY"]
 
 
 def get_user_info():
@@ -72,14 +72,11 @@ def get_civic_api_info(user_addr1, user_addr2, user_city, user_state):
     return resp.json()
 
 
-class ApiError(Exception):
-    pass
-
 user_name, user_addr1, user_addr2, user_city, user_state, user_zip, letter_body = get_user_info()
 response_object = get_civic_api_info(user_addr1, user_addr2, user_city, user_state)
 
 
-def get_mailing_addresses(response_object):
+def extract_rep_info(response_object):
     # verified_user_address = response_object['normalizedInput']
 
     for office in (response_object)['offices']:
@@ -88,26 +85,35 @@ def get_mailing_addresses(response_object):
 
     rep_name = ((response_object)['officials'])[(officials_ids[0])]['name']
     rep_address = ((response_object)['officials'])[(officials_ids[0])]['address']
+    rep_addr1 = rep_address[0]['line1']
+    rep_city = rep_address[0]['city']
+    rep_state = rep_address[0]['state']
+    rep_zip = rep_address[0]['zip']
 
-    return rep_name, rep_address
+    return rep_name, rep_addr1, rep_city, rep_state, rep_zip
 
-addresses = get_mailing_addresses(response_object, user_name)
+rep_name, rep_addr1, rep_city, rep_state, rep_zip = extract_rep_info(response_object)
+
+print rep_name, rep_addr1, rep_city, rep_state, rep_zip
 
 
-def issue_letter_request(username, address_line1, address_line2, address_city, address_state, address_zip):
-
-    lob.api_key = lob_key
+def create_sender_address(username, address_line1, address_line2, user_city, user_state, user_zip):
 
     sender_address = lob.Address.create(
         name=user_name,
         description='Letter Generator User',
         address_line1=address_line1,
         address_line2=address_line2,
-        address_city=address_city,
-        address_state=address_state,
+        address_city=user_city,
+        address_state=user_state,
         address_country='US',
-        address_zip=address_zip
+        address_zip=user_zip
     )
+    return sender_address
+
+sender_address = create_sender_address(user_name, user_addr1, user_addr2, user_city, user_state, user_zip)
+
+def create_letter():
 
     lob.Letter.create(
         description = 'US House of Representatives Letter',
@@ -129,3 +135,5 @@ def issue_letter_request(username, address_line1, address_line2, address_city, a
         )
 
 
+class ApiError(Exception):
+    pass
