@@ -111,28 +111,31 @@ def create_sender_address(username, address_line1, address_line2, user_city, use
     )
     return sender_address
 
-sender_address = create_sender_address(user_name, user_addr1, user_addr2, user_city, user_state, user_zip)
+user_address = create_sender_address(user_name, user_addr1, user_addr2, user_city, user_state, user_zip)
 
-def create_letter():
+
+def create_letter(letter, sender_address, recip_name, recip_addr1, recip_city, recip_state, recip_zip):
 
     lob.Letter.create(
-        description = 'US House of Representatives Letter',
-        to_address = {
-          'name': 'Harry Zhang',
-          'address_line1': '185 Berry St',
-          'address_line2': '# 6100',
-          'address_city': 'San Francisco',
-          'address_state': 'CA',
-          'address_zip': '94107',
-          'address_country': 'US'
+        description='US House of Representatives Letter',
+        to_address={
+            'name': recip_name,
+            'address_line1': recip_addr1,
+            'address_city': recip_city,
+            'address_state': recip_state,
+            'address_zip': recip_zip,
+            'address_country': 'US'
         },
-        from_address = sender_address,
-        file = '<html style="padding-top: 3in; margin: .5in;">HTML Letter for {{name}}</html>',
-        merge_variables = {
-        'name': 'Harry'
+        from_address=sender_address,
+        file='<html style="padding-top: 3in; margin: .5in;">{{letter}}</html>',
+        merge_variables={
+            'letter_body': letter
         },
-        color = True
+        color=True
         )
+
+letter = create_letter(letter_body, user_address, rep_name, rep_addr1, rep_city, rep_state, rep_zip)
+print letter
 
 
 class ApiError(Exception):
