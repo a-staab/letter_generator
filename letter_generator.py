@@ -49,12 +49,9 @@ def get_civic_api_info(user_addr1, user_addr2, user_city, user_state):
     legislative officials corresponding to the address in the US government at
     all levels (national, state, municipal, etc.).
     """
-    resp = requests.get('https://www.googleapis.com/civicinfo/v2/representative\
-        s?key={}&address={}%20{}%20{}%20{}&prettyPrint'.format(google_key,
-                                                               user_addr1,
-                                                               user_addr2,
-                                                               user_city,
-                                                               user_state))
+    resp = requests.get('https://www.googleapis.com/civicinfo/v2/representatives?key={}&address={}%20{}%20{}%20{}'.format(
+        google_key, user_addr1, user_addr2, user_city, user_state))
+
     if resp.status_code != 200:
         raise ApiError('Google CI: Error code %s. Reason: %s - %s' % (
             resp.status_code, resp.reason, resp.json()['error']['message']))
