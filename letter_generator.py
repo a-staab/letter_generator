@@ -89,6 +89,10 @@ def get_civic_api_info(user_addr1, user_addr2, user_city, user_state):
 
 
 def extract_rep_info(response_object):
+    """Takes a response object from the Google Civic API; returns the full name
+    and first line, second line, city, state, and zip code for the address of 
+    the first House of Representatives member found in the response object.
+    """
 
     for office in (response_object)['offices']:
         if office['name'].startswith("United States House of Representatives"):
@@ -111,6 +115,10 @@ def create_sender_address(username,
                           user_city,
                           user_state,
                           user_zip):
+    """Takes a full name and the first line, second line, city, state, and zip
+    code and sends a POST request to the Lob API to create an address. If
+    successful, returns the corresponding, standardized address.
+    """
 
     try:
         sender_address = lob.Address.create(
@@ -138,6 +146,11 @@ def create_letter(letter,
                   recip_city,
                   recip_state,
                   recip_zip):
+    """Takes a string representing the body of a letter, a JSON string providing
+    a return address, and the recipient's name and the first line, second line,
+    city, state, and zip code of their mailing address; if successful, prints
+    'Okay, great: your letter is on its way!'
+    """
 
     try:
         lob.Letter.create(
@@ -157,10 +170,12 @@ def create_letter(letter,
             color=True
             )
 
+        print "\nOkay, great: your letter is on its way!\n"
         return letter
 
     except Exception as e:
         raise ApiError("Error: " + str(e) + "\n\tLetter not created.")
+
 
 user_name, user_addr1, user_addr2, user_city, user_state, user_zip, letter_body = get_user_info()
 
@@ -186,5 +201,3 @@ letter = create_letter(letter_body,
                        rep_city,
                        rep_state,
                        rep_zip)
-
-print "\nOkay, great: your letter is on its way!\n"
