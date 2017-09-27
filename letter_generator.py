@@ -1,6 +1,5 @@
 import requests
 import os
-import pprint
 import lob
 
 google_key = os.environ["GOOGLE_API_KEY"]
@@ -11,8 +10,8 @@ def get_user_info():
     """Displays prompts on command line and returns values for each line of
     sender's postal address and the body of their letter."""
 
-    print ("\nLooks like you're looking to send a message to your senator. "
-           "\nLet's get started!")
+    # print ("\nLooks like you're looking to send a message to your senator. "
+    #        "\nLet's get started!")
 
     # sender_name = raw_input("\nWhat's your full name? Type it, and then press"
     #                         " enter. ")
@@ -44,21 +43,21 @@ def get_user_info():
     # from_zip = "46219"
     # letter_body = "Thanks, Mayor!"
 
-    # sender_name = "Joe Schmoe"
-    # from_address_1 = "1510 North Street"
-    # from_address_2 = "Suite 170"
-    # from_city = "San Francisco"
-    # from_state = "CA"
-    # from_zip = "91101"
-    # letter_body = "Thanks Lob!"
+    sender_name = "Joe Schmoe"
+    from_address_1 = "185 Berry Street"
+    from_address_2 = "Suite 170"
+    from_city = "San Francisco"
+    from_state = "CA"
+    from_zip = "94107"
+    letter_body = "This is a longer message. It's longer. So much longer. OMG LONGER. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,"
 
-    sender_name = "Eva Hesse"
-    from_address_1 = "1000 5th Avenue"
-    from_address_2 = ""
-    from_city = "New York"
-    from_state = "NY"
-    from_zip = "10028"
-    letter_body = "Hey, fund the arts!"
+    # sender_name = "Eva Hesse"
+    # from_address_1 = "1000 5th Avenue"
+    # from_address_2 = ""
+    # from_city = "New York"
+    # from_state = "NY"
+    # from_zip = "10028"
+    # letter_body = "Hey, fund the arts!"
 
     return sender_name, from_address_1, from_address_2, from_city, from_state, from_zip, letter_body
 
@@ -94,8 +93,6 @@ def extract_rep_info(response_object):
 
 rep_name, rep_addr1, rep_city, rep_state, rep_zip = extract_rep_info(response_object)
 
-print rep_name, rep_addr1, rep_city, rep_state, rep_zip
-
 
 def create_sender_address(username, address_line1, address_line2, user_city, user_state, user_zip):
 
@@ -127,12 +124,11 @@ def create_letter(letter, sender_address, recip_name, recip_addr1, recip_city, r
             'address_country': 'US'
         },
         from_address=sender_address,
-        file='<html style="padding-top: 3in; margin: .5in;">{{letter}}</html>',
-        merge_variables={
-            'letter_body': letter
-        },
+        file='<html style="padding-top: 3in; margin: .5in;">' + letter + '</html>',
         color=True
         )
+
+    return letter
 
 letter = create_letter(letter_body, user_address, rep_name, rep_addr1, rep_city, rep_state, rep_zip)
 print letter
