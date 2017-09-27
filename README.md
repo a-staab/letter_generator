@@ -12,7 +12,7 @@ Neat, right?
 - Google Civic Information API
 - Requests library
 
-![Screenshot](./screenshot.png)
+![Screenshot](screenshot.png)
 
 #### Installation
 
