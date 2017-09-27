@@ -1,7 +1,7 @@
 import requests
 import os
 import pprint
-
+import lob
 
 google_key = os.environ["GOOGLE_API_KEY"]
 lob_key = os.environ["LOB_API_KEY"]
@@ -79,8 +79,8 @@ user_name, user_addr1, user_addr2, user_city, user_state, user_zip, letter_body 
 response_object = get_civic_api_info(user_addr1, user_addr2, user_city, user_state)
 
 
-def get_mailing_addresses(response_object, sender):
-    verified_user_address = response_object['normalizedInput']
+def get_mailing_addresses(response_object):
+    # verified_user_address = response_object['normalizedInput']
 
     for office in (response_object)['offices']:
         if office['name'].startswith("United States House of Representatives"):
@@ -89,6 +89,43 @@ def get_mailing_addresses(response_object, sender):
     rep_name = ((response_object)['officials'])[(officials_ids[0])]['name']
     rep_address = ((response_object)['officials'])[(officials_ids[0])]['address']
 
-    return sender, verified_user_address, rep_name, rep_address
+    return rep_name, rep_address
 
-pprint.pprint(get_mailing_addresses(response_object, user_name))
+addresses = get_mailing_addresses(response_object, user_name)
+
+
+def issue_letter_request(username, address_line1, address_line2, address_city, address_state, address_zip):
+
+    lob.api_key = lob_key
+
+    sender_address = lob.Address.create(
+        name=user_name,
+        description='Letter Generator User',
+        address_line1=address_line1,
+        address_line2=address_line2,
+        address_city=address_city,
+        address_state=address_state,
+        address_country='US',
+        address_zip=address_zip
+    )
+
+    lob.Letter.create(
+        description = 'US House of Representatives Letter',
+        to_address = {
+          'name': 'Harry Zhang',
+          'address_line1': '185 Berry St',
+          'address_line2': '# 6100',
+          'address_city': 'San Francisco',
+          'address_state': 'CA',
+          'address_zip': '94107',
+          'address_country': 'US'
+        },
+        from_address = sender_address,
+        file = '<html style="padding-top: 3in; margin: .5in;">HTML Letter for {{name}}</html>',
+        merge_variables = {
+        'name': 'Harry'
+        },
+        color = True
+        )
+
+
