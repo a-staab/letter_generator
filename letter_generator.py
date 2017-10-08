@@ -39,7 +39,13 @@ def get_user_info():
     letter_body = raw_input("\nGreat! Now, what would you like to say in the "
                             "body of your letter? \n\n")
 
-    return sender_name, from_address_1, from_address_2, from_city, from_state, from_zip, letter_body
+    return (sender_name,
+            from_address_1,
+            from_address_2,
+            from_city,
+            from_state,
+            from_zip,
+            letter_body)
 
 
 def get_civic_api_info(user_addr1, user_addr2, user_city, user_state):
@@ -49,8 +55,10 @@ def get_civic_api_info(user_addr1, user_addr2, user_city, user_state):
     legislative officials corresponding to the address in the US government at
     all levels (national, state, municipal, etc.).
     """
-    resp = requests.get('https://www.googleapis.com/civicinfo/v2/representatives?key={}&address={}%20{}%20{}%20{}'.format(
-        google_key, user_addr1, user_addr2, user_city, user_state))
+    resp = requests.get("https://www.googleapis.com/civicinfo/v2/representa"
+                        "tives?key={}&address={}%20{}%20{}%20{}".format(
+                            google_key, user_addr1, user_addr2, user_city,
+                            user_state))
 
     if resp.status_code != 200:
         raise ApiError('Google CI: Error code %s. Reason: %s - %s' % (
@@ -147,14 +155,26 @@ def create_letter(letter,
         raise ApiError("Error: " + str(e) + "\n\tLetter not created.")
 
 
-user_name, user_addr1, user_addr2, user_city, user_state, user_zip, letter_body = get_user_info()
+(
+    user_name,
+    user_addr1,
+    user_addr2,
+    user_city,
+    user_state,
+    user_zip,
+    letter_body) = get_user_info()
 
 response_object = get_civic_api_info(user_addr1,
                                      user_addr2,
                                      user_city,
                                      user_state)
-
-rep_name, rep_addr1, rep_addr2, rep_city, rep_state, rep_zip = extract_rep_info(response_object)
+(
+    rep_name,
+    rep_addr1,
+    rep_addr2,
+    rep_city,
+    rep_state,
+    rep_zip) = extract_rep_info(response_object)
 
 user_address = create_sender_address(user_name,
                                      user_addr1,
